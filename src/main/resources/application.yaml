@@ -1,0 +1,90 @@
+spring:
+  application:
+    name: kafka-schema-registry-example
+  profiles:
+    active: "${SPRING_PROFILES_ACTIVE:default}"
+  kafka:
+    bootstrap-servers: "${KAFKA_BOOTSTRAP_SERVERS:localhost:9092,localhost:9094,localhost:9096}"
+    producer:
+      keySerializer: "org.apache.kafka.common.serialization.StringSerializer"
+      valueSerializer: "io.confluent.kafka.serializers.KafkaAvroSerializer"
+      acks: all
+      retries: 3
+      properties:
+        schema:
+          registry:
+            url: "${SCHEMA_REGISTRY_URL:http://localhost:8081}"
+        enable:
+          idempotence: true
+        max:
+          in:
+            flight:
+              requests:
+                per:
+                  connection: 5
+        delivery:
+          timeout:
+            ms: 60000
+        request:
+          timeout:
+            ms: 30000
+    consumer:
+      group-id: "${KAFKA_CONSUMER_GROUP:javatechie-new}"
+      keyDeserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      valueDeserializer: "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+      autoOffsetReset: "earliest"
+      enableAutoCommit: false
+      properties:
+        schema:
+          registry:
+            url: "${SCHEMA_REGISTRY_URL:http://localhost:8081}"
+        specific:
+          avro:
+            reader: "true"
+    listener:
+      ack-mode: manual_immediate
+      concurrency: 3
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
+topic:
+  name: javatechie-avro
+
+server:
+  port: 8181
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    info:
+      enabled: true
+  info:
+    build:
+      enabled: true
+    env:
+      enabled: true
+  health:
+    kafka:
+      enabled: true
+
+logging:
+  level:
+    com.kafka.schema.registry.example: INFO
+    org.apache.kafka: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
