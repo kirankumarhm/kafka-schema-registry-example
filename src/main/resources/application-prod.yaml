@@ -1,0 +1,38 @@
+spring:
+  main:
+    banner-mode: off
+  kafka:
+    producer:
+      properties:
+        delivery:
+          timeout:
+            ms: 120000
+        request:
+          timeout:
+            ms: 30000
+
+management:
+  endpoint:
+    health:
+      show-details: never
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+
+logging:
+  level:
+    com.kafka.schema.registry.example: INFO
+    org.apache.kafka: ERROR
+  file:
+    name: /var/log/app/kafka-schema-registry-example.log
+  logback:
+    rollingpolicy:
+      max-file-size: 50MB
+      max-history: 30
+
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
