@@ -1,0 +1,34 @@
+{
+	"namespace": "com.kafka.schema.registry.example.model",
+	"type": "record",
+	"name": "Employee",
+	"fields": [
+	
+    {
+      "name": "id",
+      "type": "int"
+    },
+    {
+      "name": "firstname",
+      "type": "string"
+    },
+    {
+      "name": "lastname",
+      "type": "string"
+    },
+    {
+      "name": "email",
+      "type": ["null", "string"],
+      "default": null
+    },
+    {
+      "name": "age",
+      "type": "int"
+    },
+    {
+      "name": "dob",
+      "type": "string"
+    }
+    ]
+
+}
